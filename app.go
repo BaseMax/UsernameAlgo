@@ -88,7 +88,7 @@ func main() {
 
 		if groupCount >= 3 && currentPrefix != "" {
 			outputPrefixes = append(outputPrefixes, currentPrefix)
-			i = j + 1 // skip the whole matched group
+			i = j + 1
 		} else {
 			i++
 		}
