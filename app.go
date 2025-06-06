@@ -59,36 +59,42 @@ func main() {
 	scanner := bufio.NewScanner(inputFile)
 	lines := []string{}
 	for scanner.Scan() {
-		lines = append(lines, strings.TrimSpace(scanner.Text()))
+		line := strings.TrimSpace(scanner.Text())
+		if line != "" {
+			lines = append(lines, line)
+		}
 	}
-
 	if err := scanner.Err(); err != nil {
 		fmt.Println("Error reading file:", err)
 		return
 	}
 
-	var outputGroups [][]string
-	for i := 0; i < len(lines)-1; i++ {
-		base := lines[i]
-		prefix := ""
-		group := []string{base}
-		for j := i + 1; j < len(lines); j++ {
-			p := commonPrefix(base, lines[j])
-			if p == "" {
+	outputPrefixes := []string{}
+	i := 0
+	for i < len(lines)-1 {
+		j := i + 1
+		currentPrefix := commonPrefix(lines[i], lines[j])
+		groupCount := 2
+
+		for j+1 < len(lines) {
+			nextPrefix := commonPrefix(currentPrefix, lines[j+1])
+			if nextPrefix == "" {
 				break
 			}
-			base = p
-			prefix = p
-			group = append(group, lines[j])
+			currentPrefix = nextPrefix
+			j++
+			groupCount++
 		}
-		if len(group) >= 3 {
-			outputGroups = append(outputGroups, group)
-			fmt.Println("Common prefix:", prefix)
-			i += len(group) - 1 // skip next already grouped
+
+		if groupCount >= 3 && currentPrefix != "" {
+			outputPrefixes = append(outputPrefixes, currentPrefix)
+			i = j + 1 // skip the whole matched group
+		} else {
+			i++
 		}
 	}
 
-	if len(outputGroups) == 0 {
+	if len(outputPrefixes) == 0 {
 		fmt.Println("No matching prefix groups found.")
 		return
 	}
@@ -102,13 +108,10 @@ func main() {
 	defer outputFile.Close()
 
 	writer := bufio.NewWriter(outputFile)
-	for _, group := range outputGroups {
-		for _, line := range group {
-			writer.WriteString(line + "\n")
-		}
-		writer.WriteString("\n")
+	for _, prefix := range outputPrefixes {
+		writer.WriteString(prefix + "\n")
 	}
 	writer.Flush()
 
-	fmt.Printf("Filtered output written to: %s\n", outputPath)
+	fmt.Printf("✅ Common prefixes written to: %s\n", outputPath)
 }
