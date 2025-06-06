@@ -27,7 +27,7 @@ $ go run app.go
 Enter file path: usernames.txt
 ```
 
-### Example Input (usernames.txt):
+### Example Input (`usernames.txt`):
 
 ```
 alpha_apple
@@ -39,7 +39,7 @@ beta_bounce
 gamma_grape
 ```
 
-### Example Output (usernames.txt.out):
+### Example Output (`usernames.txt.out`):
 
 ```
 alpha_ap
