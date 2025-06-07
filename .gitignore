@@ -4,5 +4,6 @@
 *.gz
 *.exe
 
-# *.txt
-# *.out
+usernames.txt
+!*.out
+!part*.txt
