@@ -75,6 +75,28 @@ go build -o usernamealgo.exe app.go
 ├── usernamealgo.exe # Built binary
 ```
 
+## ✅ PowerShell script to split a large file by number of lines
+
+```
+$sourceFile = "usernames.txt"
+$linesPerFile = 1000000
+$counter = 0
+$fileIndex = 1
+$outFile = "part$fileIndex.txt"
+
+Get-Content $sourceFile | ForEach-Object {
+    if ($counter -ge $linesPerFile) {
+        $fileIndex++
+        $outFile = "part$fileIndex.txt"
+        $counter = 0
+    }
+    Add-Content -Path $outFile -Value $_
+    $counter++
+}
+
+Write-Host "✅ Done. Created $fileIndex part(s)."
+```
+
 ## 📄 License
 
 This project is licensed under the MIT License.
